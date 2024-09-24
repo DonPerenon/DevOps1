@@ -1,0 +1,52 @@
+server {
+    listen 80;
+    server_name 45.8.97.55;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name 45.8.97.55;
+
+    ssl_certificate /root/Itmo-DevOps-Cloud/lab1/web_server/ssl/nginx.crt;
+    ssl_certificate_key /root/Itmo-DevOps-Cloud/lab1/web_server/ssl/nginx.key;
+
+    root /root/Itmo-DevOps-Cloud/lab1/site1;
+    index first.html;
+
+    location / {
+        try_files $uri $uri/ =404; 
+    }
+
+    location /second {
+    alias /root/Itmo-DevOps-Cloud/lab1/site2/second.html;
+    default_type text/html; 
+    }   
+
+    location /second.html {
+    alias /root/Itmo-DevOps-Cloud/lab1/site2/second.html; 
+    }
+
+
+    access_log /root/Itmo-DevOps-Cloud/lab1/logs/site1_access.log;
+    error_log /root/Itmo-DevOps-Cloud/lab1/logs/site1_error.log;
+}
+
+server {
+    listen 443 ssl;
+    server_name 185.104.113.99;
+
+    ssl_certificate /root/Itmo-DevOps-Cloud/lab1/web_server/ssl/nginx.crt;
+    ssl_certificate_key /root/Itmo-DevOps-Cloud/lab1/web_server/ssl/nginx.key;
+
+    root /root/Itmo-DevOps-Cloud/lab1/site2;
+    index second.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    access_log /root/Itmo-DevOps-Cloud/lab1/logs/site2_access.log;
+    error_log /root/Itmo-DevOps-Cloud/lab1/logs/site2_error.log;
+}
